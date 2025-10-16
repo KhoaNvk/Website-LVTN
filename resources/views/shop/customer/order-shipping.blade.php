@@ -34,9 +34,6 @@
                         <li>
                             <a class="active"><i class="fa fa-shopping-cart"></i> Đơn Đặt Hàng</a>
                         </li>
-                        <li>
-                            <a href="{{URL::to('/show-voucher')}}"><i class="fa fa-ticket"></i> Kho voucher</a>
-                        </li>
                     </ul>
                 </div>
             </div>
