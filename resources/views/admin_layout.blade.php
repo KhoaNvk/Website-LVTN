@@ -129,7 +129,7 @@
                           </ul>
                         </li>
 
-                                <a href="#voucher" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                <!-- <a href="#voucher" class="collapsed" data-toggle="collapse" aria-expanded="false">
                                     <svg class="svg-icon" id="coupon-management" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M21 8V7a2 2 0 0 0-2-2h-3l-2-2h-4l-2 2H5a2 2 0 0 0-2 2v1a3 3 0 0 1 0 6v1a2 2 0 0 0 2 2h3l2 2h4l2-2h3a2 2 0 0 0 2-2v-1a3 3 0 0 1 0-6z"></path>
                                         <line x1="9" y1="12" x2="15" y2="12"></line>
@@ -138,7 +138,7 @@
                                     <svg class="svg-icon iq-arrow-right arrow-active" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path>
                                     </svg>
-                                </a>
+                                </a> -->
                                 <ul id="voucher" class="iq-submenu collapse" data-parent="#product">
                                     <li class="{{ Request::is('manage-voucher') ? 'active' : '' }}">
                                         <a href="{{URL::to('/manage-voucher')}}">

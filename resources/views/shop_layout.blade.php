@@ -132,7 +132,7 @@
                                     <ul>
                                         <li><a href="{{URL::to('/home')}}">Trang chủ</a></li>
                                         <li>
-                                            <a href="{{URL::to('/store')}}">Cửa hàng <span class="new">Mới</span></a>
+                                            <a href="{{URL::to('/store')}}">Cửa hàng</a>
 
                                             <ul class="mega-sub-menu">
                                                 <li class="mega-dropdown">
