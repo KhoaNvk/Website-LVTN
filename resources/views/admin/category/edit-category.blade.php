@@ -14,7 +14,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{URL::to('/submit-edit-category/'.$select_category->idCategory)}}" method="POST" data-toggle="validator">
+                    <form action="{{URL::to('/submit-edit-category/'.$select_category->idCategory)}}" method="POST" enctype="multipart/form-data" data-toggle="validator">
+
                         @csrf
                         <div class="row"> 
                             <div class="col-md-12">                     
@@ -22,6 +23,12 @@
                                     <label>Tên danh mục</label>
                                     <input type="text" name="CategoryName" class="form-control slug" onkeyup="ChangeToSlug()" value="{{$select_category->CategoryName}}" placeholder="Nhập tên danh mục" required>
                                     <div class="help-block with-errors"></div>
+                                    <label>Ảnh danh mục</label>
+                                    <input type="file" name="CategoryImage" class="form-control">
+                                    <input type="hidden" name="old_image" value="{{$select_category->CategoryImage}}">
+                                    <img src="{{asset('public/storage/kidoldash/images/category/'.$select_category->CategoryImage)}}" alt="" style="height: 100px; width: 100px; object-fit: cover;">
+                                    
+                                   
                                 </div>
                                 <input type="hidden" name="CategorySlug" value="{{$select_category->CategorySlug}}" class="form-control" id="convert_slug">
                             </div>    

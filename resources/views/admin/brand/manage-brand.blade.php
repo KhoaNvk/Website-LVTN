@@ -22,6 +22,7 @@
                     <tr class="ligth ligth-data">
                         <th>Mã thương hiệu</th>
                         <th>Tên thương hiệu</th>
+                        <th>Danh mục</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -30,6 +31,16 @@
                     <tr>
                         <td>{{$brand->idBrand}}</td>
                         <td>{{$brand->BrandName}}</td>
+                        <td>
+    @if($brand->categories && $brand->categories->count() > 0)
+        @foreach($brand->categories as $cat)
+            <span class="badge badge-info mr-1">{{$cat->CategoryName}}</span>
+        @endforeach
+    @else
+        <span class="text-muted">Chưa gắn danh mục</span>
+    @endif
+</td>
+
                         <td>
                             <div class="d-flex align-items-center list-action">
                                 <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sửa"

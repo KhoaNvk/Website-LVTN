@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    public $timestamp = false;
-    protected $fillable = ['CategoryName','CategorySlug'];
+    public $timestamps = false;
+    protected $fillable = ['CategoryName','CategorySlug','CategoryImage'];
     protected $primaryKey = 'idCategory';
     protected $table = 'category';
+
+public function brands()
+{
+    return $this->belongsToMany(Brand::class, 'brand_category', 'idCategory', 'idBrand');
+}
 
     // public function product(){
     //     return $this->hasMany('App\Models\Product');

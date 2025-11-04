@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Category;
 use App\Models\Bill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Brand;
 
 
@@ -53,7 +55,9 @@ class BrandController extends Controller
             $count_shipping_bill = Bill::where('Status', '1')->count();
             $count_shipped_bill = Bill::where('Status', '2')->count();
             $count_cancelled_bill = Bill::where('Status', '99')->count();
-            return view("admin.brand.add-brand")->with(compact('count_waiting_bill', 'count_confirmed_bill', 'count_shipping_bill', 'count_shipped_bill', 'count_cancelled_bill'));
+            $list_category = Category::all();
+            return view("admin.brand.add-brand")->with(compact('count_waiting_bill', 'count_confirmed_bill', 'count_shipping_bill', 'count_shipped_bill', 'count_cancelled_bill', 'list_category'));
+
         }
 
         // Chuyển đến trang sửa thương hiệu
@@ -69,7 +73,8 @@ class BrandController extends Controller
             $count_shipping_bill = Bill::where('Status', '1')->count();
             $count_shipped_bill = Bill::where('Status', '2')->count();
             $count_cancelled_bill = Bill::where('Status', '99')->count();
-            return view("admin.brand.edit-brand")->with(compact('select_brand','count_waiting_bill', 'count_confirmed_bill', 'count_shipping_bill', 'count_shipped_bill', 'count_cancelled_bill'));
+            $list_category = Category::all();
+            return view("admin.brand.edit-brand")->with(compact('select_brand','count_waiting_bill', 'count_confirmed_bill', 'count_shipping_bill', 'count_shipped_bill', 'count_cancelled_bill', 'list_category'));
         }
 
         // Thêm thương hiệu
@@ -84,7 +89,21 @@ class BrandController extends Controller
             }else{
                 $brand->BrandName = $data['BrandName'];
                 $brand->BrandSlug = $data['BrandSlug'];
+                if ($request->hasFile('BrandImage')) {
+                    // Xóa ảnh cũ nếu có
+                    if ($brand->BrandImage) {
+                        Storage::delete('public/kidoldash/images/brand/' . $brand->BrandImage);
+                    }
+                    $file = $request->file('BrandImage');
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('public/kidoldash/images/brand', $filename);
+                    $brand->BrandImage = $filename;
+                }
                 $brand->save();
+
+                if ($request->has('categories')) {
+                $brand->categories()->sync($request->categories);
+    }
                 return Redirect::to('add-brand')->with('message', 'Thêm thương hiệu thành công');
             }
         }
@@ -101,7 +120,21 @@ class BrandController extends Controller
             }else{
                 $brand->BrandName = $data['BrandName'];
                 $brand->BrandSlug = $data['BrandSlug'];
+                if ($request->hasFile('BrandImage')) {
+                    // Xóa ảnh cũ nếu có
+                    if ($brand->BrandImage) {
+                        Storage::delete('public/kidoldash/images/brand/' . $brand->BrandImage);
+                    }
+                    $file = $request->file('BrandImage');
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('public/kidoldash/images/brand', $filename);
+                    $brand->BrandImage = $filename;
+                }
                 $brand->save();
+
+                if ($request->has('categories')) {
+                $brand->categories()->sync($request->categories);
+                }
                 return redirect()->back()->with('message', 'Sửa thương hiệu thành công');
             }
         }

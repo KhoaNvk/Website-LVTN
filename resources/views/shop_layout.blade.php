@@ -122,7 +122,7 @@
                         <div class="col-lg-2">
                             <div class="header-logo">
                                 <a href="{{URL::to('/home')}}"><img src="{{asset('public/kidolshop/images/logo/kingshoes.png')}}" alt=""
-                                    style="width: 60px; height: auto;">
+                                    style="width: 80px; height: auto;">
                                 </a>
                             </div>
                         </div>
@@ -132,49 +132,83 @@
                                     <ul>
                                         <li><a href="{{URL::to('/home')}}">Trang chủ</a></li>
                                         <li>
-                                            <a href="{{URL::to('/store')}}">Cửa hàng</a>
+    <!-- <a href="{{URL::to('/store')}}">Cửa hàng</a>
+    <a class="mega-title" href="#">Danh mục</a> -->
 
-                                            <ul class="mega-sub-menu">
-                                                <li class="mega-dropdown">
-                                                    <a class="mega-title" href="{{URL::to('/store')}}">Danh mục</a>
+            <ul class="mega-item category-list">
+                @foreach($categories_with_brands as $key => $category)
+                <li class="category-item" data-category="{{$category['idCategory']}}">
+                    <a href="{{URL::to('/store?category='.$category['idCategory'])}}">{{$category['CategoryName']}}</a>
 
-                                                    <ul class="mega-item">
-                                                        @foreach($list_category as $key => $category)
-                                                        <li><a href="{{URL::to('/store?show=all&category='.$category->idCategory.'&sort_by=new')}}">{{$category->CategoryName}}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-dropdown">
-                                                    <a class="mega-title" href="{{URL::to('/store')}}">Thương hiệu</a>
+                    <!-- Danh sách brand ẩn mặc định -->
+                    <!-- <ul class="brand-sublist">
+                        @foreach($category['brands'] as $brand)
+                        <li><a href="{{URL::to('/store?category='.$category['idCategory'].'&brand='.$brand['idBrand'].'&sort_by=new')}}">{{$brand['BrandName']}}</a></li>
+                        @endforeach
+                    </ul> -->
+                </li>
+                @endforeach
+                
+            </ul>
+            
+    <!-- <ul class="mega-sub-menu">
+        <li class="mega-dropdown">
+            
+        </li>
+        <li class="mega-dropdown">
+            <a class="mega-title" href="#">Danh mục khác</a>
+            <ul class="mega-item">
+                <li><a href="{{URL::to('/store?show=all&sort_by=new')}}">Sản phẩm mới</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=bestsellers')}}">Sản phẩm bán chạy</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=featured')}}">Sản phẩm nổi bật</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=sale')}}">Sản phẩm SALE</a></li>
+            </ul>
+        </li>
+    </ul> -->
+</li>
 
-                                                    <ul class="mega-item">
-                                                        @foreach($list_brand as $key => $brand)
-                                                        <li><a href="{{URL::to('/store?show=all&brand='.$brand->idBrand.'&sort_by=new')}}">{{$brand->BrandName}}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-dropdown">
-                                                    <a class="mega-title" href="{{URL::to('/store')}}">Danh Mục Khác</a>
+                                        <!-- <li><a href="{{URL::to('/blog')}}">Tin tức</a></li> -->
+                                    </ul>
+    <!-- <a href="{{URL::to('/store')}}">Cửa hàng</a>
+    <a class="mega-title" href="#">Danh mục</a> -->
 
-                                                    <ul class="mega-item">
-                                                        <li><a href="{{URL::to('/store?show=all&sort_by=new')}}">Sản phẩm mới</a></li>
-                                                        <li><a href="{{URL::to('/store?show=all&sort_by=bestsellers')}}">Sản phẩm bán chạy</a></li>
-                                                        <li><a href="{{URL::to('/store?show=all&sort_by=featured')}}">Sản phẩm nổi bật</a></li>
-                                                        <li><a href="{{URL::to('/store?show=all&sort_by=sale')}}">Sản phẩm đang SALE</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-dropdown">
-                                                    <a class="menu-banner" href="#">
-                                                        <img src="{{asset('public/kidolshop/images/cuahang-1.jpg')}}" alt="">
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
+            <!-- Danh sách Brand -->
+<ul class="brand-header-list">
+    @foreach($list_brand as $brand)
+        <li >
+            <a href="{{ URL::to('/store?brand='.$brand->idBrand.'&sort_by=new') }}" >
+            <img src="{{ asset('public/storage/kidoldash/images/brand/' . $brand->BrandImage) }}"
+                     style="width: 25px; height: 25px; object-fit: contain; margin-right: 6px;">
+            
+                {{ $brand->BrandName }}
+            </a>
+        </li>
+    @endforeach
+</ul>
+
+            
+    <!-- <ul class="mega-sub-menu">
+        <li class="mega-dropdown">
+            
+        </li>
+        <li class="mega-dropdown">
+            <a class="mega-title" href="#">Danh mục khác</a>
+            <ul class="mega-item">
+                <li><a href="{{URL::to('/store?show=all&sort_by=new')}}">Sản phẩm mới</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=bestsellers')}}">Sản phẩm bán chạy</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=featured')}}">Sản phẩm nổi bật</a></li>
+                <li><a href="{{URL::to('/store?show=all&sort_by=sale')}}">Sản phẩm SALE</a></li>
+            </ul>
+        </li>
+    </ul> -->
+</li>
+
                                         <!-- <li><a href="{{URL::to('/blog')}}">Tin tức</a></li> -->
                                     </ul>
                                 </nav>
                             </div>
                         </div>
+                        
                         <div class="col-lg-3">
                             <div class="header-meta-info" style="position:relative;">
                                 <div class="header-search">
@@ -563,12 +597,12 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; justify-content: center;">
+                        <!-- <div style="display: flex; justify-content: center;">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.985717962225!2d106.67804937480427!3d10.735583889410766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f88bd85a703%3A0xd03200cac735da6f!2zNDcgxJAuIENhbyBM4buXLCBQaMaw4budbmcgNCwgUXXhuq1uIDgsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1721893787620!5m2!1svi!2s"
                                 width="700" height="250" style="border:0;" allowfullscreen=""
                                 loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                             </iframe>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>

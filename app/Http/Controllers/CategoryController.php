@@ -5,6 +5,7 @@ use App\Models\Bill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -83,6 +84,15 @@ class CategoryController extends Controller
             }else{
                 $category->CategoryName = $data['CategoryName'];
                 $category->CategorySlug = $data['CategorySlug'];
+            if ($request->hasFile('CategoryImage')) {
+            $file = $request->file('CategoryImage');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/kidoldash/images/category', $filename);
+            $category->CategoryImage = $filename;
+            } else {
+            $category->CategoryImage = null; // Hoặc giá trị mặc định khác nếu cần
+            }
+                
                 $category->save();
                 return Redirect::to('add-category')->with('message', 'Thêm danh mục thành công');
             }
@@ -100,6 +110,16 @@ class CategoryController extends Controller
             }else{
                 $category->CategoryName = $data['CategoryName'];
                 $category->CategorySlug = $data['CategorySlug'];
+                if ($request->hasFile('CategoryImage')) {
+                    // Xóa ảnh cũ nếu có
+                    if ($category->CategoryImage) {
+                        Storage::delete('public/kidoldash/images/category/' . $category->CategoryImage);
+                    }
+                    $file = $request->file('CategoryImage');
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('public/kidoldash/images/category', $filename);
+                    $category->CategoryImage = $filename;
+                }
                 $category->save();
                 return redirect()->back()->with('message', 'Sửa danh mục thành công');
             }

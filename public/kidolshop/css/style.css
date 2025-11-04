@@ -2109,8 +2109,8 @@ blockquote p {
 /*  3.2 - Header Main CSS
 /*----------------------------------------*/
 .header-section {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   -webkit-transition: all 0.3s linear;
   -o-transition: all 0.3s linear;
   transition: all 0.3s linear;
@@ -3572,6 +3572,16 @@ blockquote p {
   .single-product.product-list {
     display: block;
   }
+}
+
+.single-product.product-list {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.single-product.product-list:last-child {
+  border-bottom: none;
 }
 
 .single-product.product-list .product-image {
@@ -8892,7 +8902,7 @@ box-shadow: none;
 
 .middle-header-holder{
   text-align: center;
-  margin: 13px 0 43px 0;
+  margin: 10px 0 43px 0;
 }
 .middle-header {
 font-weight: bold;
@@ -9901,4 +9911,79 @@ input[type=checkbox] {
 }
 .css_select{ 
   display: inline-table; width: 25%; padding: 5px; margin: 5px 2%; border: solid 1px #686868; border-radius: 5px;
+}
+.single-category {
+    overflow: hidden;
+    position: relative;
+}
+
+.single-category img {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.category-overlay {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    background: rgba(192,192,192,0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.swiper-slide {
+    width: 25%; /* 4 cột mỗi lần hiển thị */
+    padding: 0.25rem;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #000;
+    transition: opacity 0.3s;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    opacity: 0.7;
+}
+.category-item {
+    position: relative;
+}
+
+.brand-sublist {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -5px;
+    background: #fff;
+    border: 2px solid #ddd;
+    padding: 4px;
+    white-space: nowrap;
+    min-width: 1px;
+    z-index: 100;
+}
+
+.category-item:hover .brand-sublist {
+    display: block;
+}
+
+.brand-sublist li {
+    list-style: none;
+    padding: 5px 5px;
+}
+
+.brand-sublist li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.brand-sublist li a:hover {
+    color: #ff6600;
 }

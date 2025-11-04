@@ -11,6 +11,7 @@
                 style="background-image: url('public/kidolshop/images/banner/bg2.jpg'); height: 550px;">
                 <div class="container">
                     <div class="slider-content">
+</br>
                         <h2 class="main-title">Giảm giá sốc</h2>
                         <ul class="slider-btn">
                             <li><a href="{{URL::to('/store')}}" class="btn btn-round btn-primary">Bắt đầu mua sắm</a></li>
@@ -125,6 +126,45 @@
 </div>
 <!--About End-->
 
+<!--Category Start-->
+
+<div class="features-product-area section-padding-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-9 col-sm-11">
+                <div class="section-title text-center">
+                    <h2 class="title">Danh mục sản phẩm</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-slider-wrapper position-relative">
+            <div class="swiper category-swiper">
+                <div class="swiper-wrapper">
+                    @foreach($list_category as $category)
+                    <div class="swiper-slide">
+                        <div class="single-category text-center mb-2 position-relative">
+                            <a href="{{URL::to('/store?category='.$category->idCategory)}}" class="d-block position-relative">
+                                <img src="{{asset('public/storage/kidoldash/images/category/'.$category->CategoryImage)}}" 
+                                     alt="{{$category->CategoryName}}" 
+                                     style="height: 200px; width: 100%; object-fit: cover;">
+                                <div class="category-overlay">
+                                    <h4 class="category-name">{{$category->CategoryName}}</h4>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <!-- Nút điều hướng -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--New Product Start-->
 <div class="features-product-area section-padding-5">
     <div class="container">
@@ -141,9 +181,9 @@
                     <li>
                         <a class="active" data-toggle="tab" href="#tab3" role="tab">Bán chạy</a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a data-toggle="tab" href="#tab1" role="tab">Đang Sale</a>
-                    </li>
+                    </li> -->
                     <li>
                         <a data-toggle="tab" href="#tab2" role="tab">Chính sách đổi trả</a>
                     </li>
@@ -372,5 +412,30 @@
         });
     </script>
 @endif
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const swiper = new Swiper(".category-swiper", {
+            slidesPerView: 4,
+            spaceBetween: 10,
+            loop: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            
+            breakpoints: {
+                0: { slidesPerView: 1 },
+                576: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                992: { slidesPerView: 4 }
+            }
+        });
+    });
+</script>
 @endsection

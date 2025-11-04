@@ -33,11 +33,22 @@ class HomeController extends Controller
         }
 
         // Tiếp tục lấy dữ liệu cho trang chủ
-        $list_category = Category::get();
+        $list_category = Category::with('brands')->get();
         $list_brand = Brand::get();
         $list_blog = Blog::where('Status', '1')->get();
         $recommend_pds_arrays = [];
+        $categories_with_brands = [];
 
+        foreach ($list_category as $category) {
+            $brands = $category->brands;
+            $categories_with_brands[] = [
+                'idCategory' => $category->idCategory,
+                'CategoryName' => $category->CategoryName,
+                'idbrands' => $brands->pluck('idBrand'),
+                'brands' => $category->brands
+
+    ];
+}
         $sub30days = Carbon::now()->subDays(30)->toDateString();
 
         if (Session::get('idCustomer') == '') $idCustomer = session()->getId();
@@ -121,7 +132,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('shop.home')->with(compact('list_category', 'list_brand', 'list_new_pd', 'list_featured_pd', 'list_bestsellers_pd', 'list_blog', 'recommend_pds'));
+        return view('shop.home')->with(compact('list_category', 'list_brand', 'list_new_pd', 'list_featured_pd', 'list_bestsellers_pd', 'list_blog', 'recommend_pds', 'categories_with_brands'));
     }
 
     public function getAttributeValueByAttributeId(Request $request)
