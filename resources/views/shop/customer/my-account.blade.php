@@ -64,6 +64,10 @@
                                                         <span class="profile__info-body-left-item-title" style="margin-left: 52px;">Số Điện Thoại</span>
                                                         <input class="ml-30" style="width:65%;" name="PhoneNumber" id="PhoneNumber" type="text" value="{{$customer->PhoneNumber}}">
                                                     </div>
+                                                    <div class="form-group mb-30">
+                                                        <span for="Email" class="profile__info-body-left-item-title" style="margin: 0 66px 0 52px;">Email </span>
+                                                        <input class="ml-30" style="width:65%;" name="Email" id="Email" type="text" value="{{$customer->Email}}">
+                                                    </div>
 
                                                     <div class="form-group mb-30">
                                                         <span for="Address" class="profile__info-body-left-item-title" style="margin: 0 58px 0 52px;">Địa chỉ </span>
@@ -145,7 +149,12 @@
                     },
                     Address: {
                         required: true
+                    },
+                    Email: {
+                        required: true,
+                        email: true
                     }
+
                 },
 
                 messages: {
@@ -160,6 +169,10 @@
                     },
                     Address: {
                         required: "Vui lòng nhập trường này"
+                    },
+                    Email: {
+                        required: "Vui lòng nhập trường này",
+                        email: "Vui lòng nhập đúng định dạng email"
                     }
                 },
                 // nếu form hợp lệ gửi 

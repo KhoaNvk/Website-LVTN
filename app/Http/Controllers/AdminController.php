@@ -333,35 +333,41 @@ class AdminController extends Controller
     }
 
     // Thống kê doanh thu 7 ngày qua
-    public function chart_7days(){
+    public function chart_7days()
+{
+    $sub7days = Carbon::now()->subDays(7)->toDateString();
 
-        $sub7days = Carbon::now()->subDays(7)->toDateString();  // ngày cách 7 ngày hiện tại, lấy hóa đơn 7 ngày trc -> hiện tại
-        // doanh thu số đơn mỗi ngày
-        $get_statistic = Bill::whereNotIn('bill.Status',[99]) // chỉ lấy hóa đơn chưa bị hủy
-        ->whereBetween('created_at',[$sub7days,now()]) // lọc theo thời gian
-            //dữ liệu trả: tổng doanh thu, số lượng đơn , ngày
-            ->selectRaw('sum(TotalBill) as Sale, count(idBill) as QtyBill, date(created_at) as Date')
-            ->groupBy('Date')->get(); // lọc nhóm theo ngày
-        //số lượng sp bán mỗi ngày
-        $total_sold = BillInfo::join('bill','bill.idBill','=','billinfo.idBill')->whereNotIn('bill.Status',[99])
-            ->whereBetween('bill.created_at',[$sub7days,now()])->selectRaw('sum(QuantityBuy) as TotalSold, date(bill.created_at) as Date')
-            ->groupBy('Date')->get();
+    // Tổng doanh thu + số đơn
+    $get_statistic = Bill::whereNotIn('bill.Status', [99])
+        ->whereBetween('created_at', [$sub7days, now()])
+        ->selectRaw('SUM(TotalBill) as Sale, COUNT(idBill) as QtyBill, DATE(created_at) as Date')
+        ->groupBy('Date')
+        ->get();
 
-        if($get_statistic->count() > 0){//kiểm tra dữ liệu có trống hay ko
-            foreach($get_statistic as $key => $statistic)// vòng lặp duyệt từng ngày
-            {// tạo phần tử dữ liệu cho biểu đồ
-                $chart_data[] = array(
-                    'Date' => $statistic->Date,//ngày thống kê
-                    'Sale' => $statistic->Sale,//tổng doanh thu trong ngày
-                    'TotalSold' => $total_sold[$key]->TotalSold,//tổng số lượng bán ra ngày đó
-                    'QtyBill' => $statistic->QtyBill// tổng số đơn hàng trong ngày
-                );
-            }
-        }else $chart_data[] = array();// trường hợp k có dữ liệu
-        //Nếu $get_statistic không có bản ghi, thì gán $chart_data là một mảng rỗng, phòng trường hợp trả về JSON mà không lỗi.
-        //Chuyển mảng $chart_data thành chuỗi JSON. In ra để trả về kết quả cho front-end hiển thị biểu đồ.
-        echo $data = json_encode($chart_data);
+    // Tổng số lượng sp bán
+    $total_sold = BillInfo::join('bill', 'bill.idBill', '=', 'billinfo.idBill')
+        ->whereNotIn('bill.Status', [99])
+        ->whereBetween('bill.created_at', [$sub7days, now()])
+        ->selectRaw('SUM(QuantityBuy) as TotalSold, DATE(bill.created_at) as Date')
+        ->groupBy('Date')
+        ->get()
+        ->keyBy('Date'); // ⚡ Gán key theo ngày
+
+    $chart_data = [];
+
+    foreach ($get_statistic as $statistic) {
+        $date = $statistic->Date;
+        $chart_data[] = [
+            'Date' => $date,
+            'Sale' => $statistic->Sale,
+            'TotalSold' => $total_sold[$date]->TotalSold ?? 0, // ⚡ Lấy theo ngày, nếu không có => 0
+            'QtyBill' => $statistic->QtyBill,
+        ];
     }
+
+    return response()->json($chart_data);
+}
+
 
     // Thống kê doanh thu theo ngày, tháng, năm
     public function statistic_by_date_order(Request $request){
@@ -397,19 +403,29 @@ class AdminController extends Controller
                 ->groupBy('Date')->get();
         }
 
-        if($get_statistic->count() > 0){
-            foreach($get_statistic as $key => $statistic)
-            {
-                $chart_data[] = array(
-                    'Date' => $statistic->Date,
-                    'Sale' => $statistic->Sale,
-                    'TotalSold' => $total_sold[$key]->TotalSold,
-                    'QtyBill' => $statistic->QtyBill
-                );
-            }
-        }else $chart_data[] = array();
+        if ($get_statistic->count() > 0) {
+    // Chuyển danh sách sản phẩm bán được sang dạng key-value [Date => TotalSold]
+    $sold_map = $total_sold->pluck('TotalSold', 'Date')->toArray();
 
-        echo $data = json_encode($chart_data);
+    $chart_data = [];
+
+    foreach ($get_statistic as $statistic) {
+
+        $formattedDate = Carbon::parse($statistic->Date)->format('d-m-Y');
+        $statistic->Date = $formattedDate;
+
+        $chart_data[] = [
+            'Date' => $statistic->Date,
+            'Sale' => $statistic->Sale,
+            'TotalSold' => $sold_map[$statistic->Date] ?? 0, // nếu không có thì gán 0
+            'QtyBill' => $statistic->QtyBill
+        ];
+    }
+} else {
+    $chart_data = [];
+}
+
+return response()->json($chart_data);
     }
 
     // Thống kê top sản phẩm bán chạy trong tuần, tháng, năm

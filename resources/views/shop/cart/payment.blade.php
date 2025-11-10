@@ -248,6 +248,12 @@
                             <span class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label for="Email" class="col-form-label">Email:</label>
+                            <input type="text" class="form-control" name="Email" id="Email"
+                                   value="{{$customer->Email}}">
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
                             <label for="Address" class="col-form-label">Địa chỉ:</label>
                             <textarea class="form-control" name="Address" id="Address"></textarea>
                             <span class="text-danger"></span>
@@ -287,6 +293,11 @@
                         <div class="form-group">
                             <label for="Address" class="col-form-label">Địa chỉ:</label>
                             <textarea class="form-control" name="Address" id="Address"></textarea>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email" class="col-form-label">Email:</label>
+                            <input type="text" class="form-control" name="Email" id="Email">
                             <span class="text-danger"></span>
                         </div>
                     </div>
@@ -339,13 +350,14 @@
                             $('#form-edit-address #CustomerName').val($(this).data("name"));
                             $('#form-edit-address #PhoneNumber').val($(this).data("phone"));
                             $('#form-edit-address #Address').val($(this).data("address"));
+                            $('#form-edit-address #Email').val($(this).data("email"));
                             var idAddress = $(this).data("id");
 
                             $("#form-edit-address").validate({
                                 rules: {
                                     Address: {
                                         required: true,
-                                        minlength: 20
+                                        minlength: 5
                                     },
                                     CustomerName: {
                                         required: true,
@@ -355,13 +367,17 @@
                                         required: true,
                                         minlength: 10,
                                         maxlength: 12
+                                    },
+                                    Email: {
+                                        required: true,
+                                        email: true
                                     }
                                 },
 
                                 messages: {
                                     Address: {
                                         required: "Vui lòng nhập trường này",
-                                        minlength: "Nhập địa chỉ tối thiểu 20 ký tự"
+                                        minlength: "Nhập địa chỉ tối thiểu 5 ký tự"
                                     },
                                     CustomerName: {
                                         required: "Vui lòng nhập trường này",
@@ -371,6 +387,10 @@
                                         required: "Vui lòng nhập trường này",
                                         minlength: "Nhập số điện thoại tối thiểu 10 chữ số",
                                         maxlength: "Nhập số điện thoại tối đa 12 chữ số"
+                                    },
+                                    Email: {
+                                        required: "Vui lòng nhập trường này",
+                                        email: "Vui lòng nhập đúng định dạng email"
                                     }
                                 },
                                 // nếu hợp lệ gửi Ajax post để cập nhật, sau đó đóng model và làm mới danh sách
@@ -378,6 +398,7 @@
                                     var CustomerName = $('#form-edit-address #CustomerName').val();
                                     var PhoneNumber = $('#form-edit-address #PhoneNumber').val();
                                     var Address = $('#form-edit-address #Address').val();
+                                    var Email = $('#form-edit-address #Email').val();
                                     var _token = $('input[name="_token"]').val();
                                     $.ajax({
                                         url: APP_URL + '/edit-address/' + idAddress,
@@ -387,6 +408,7 @@
                                             CustomerName: CustomerName,
                                             PhoneNumber: PhoneNumber,
                                             Address: Address,
+                                            Email: Email,
                                             _token: _token
                                         },
                                         success: function (data) {
@@ -406,7 +428,7 @@
                 rules: {
                     Address: {
                         required: true,
-                        minlength: 20
+                        minlength: 5
                     },
                     CustomerName: {
                         required: true,
@@ -416,13 +438,17 @@
                         required: true,
                         minlength: 10,
                         maxlength: 12
+                    },
+                    Email: {
+                        required: true,
+                        email: true
                     }
                 },
 
                 messages: {
                     Address: {
                         required: "Vui lòng nhập trường này",
-                        minlength: "Nhập địa chỉ tối thiểu 20 ký tự"
+                        minlength: "Nhập địa chỉ tối thiểu 5 ký tự"
                     },
                     CustomerName: {
                         required: "Vui lòng nhập trường này",
@@ -432,6 +458,10 @@
                         required: "Vui lòng nhập trường này",
                         minlength: "Nhập số điện thoại tối thiểu 10 chữ số",
                         maxlength: "Nhập số điện thoại tối đa 12 chữ số"
+                    },
+                    Email: {
+                        required: "Vui lòng nhập trường này",
+                        email: "Vui lòng nhập đúng định dạng email"
                     }
                 },
                 //Nếu thành công gửi dữ liệu đến insert-address , sau đó đóng model và làm mới danh sách
@@ -439,12 +469,14 @@
                     var CustomerName = $('#CustomerName').val();
                     var PhoneNumber = $('#PhoneNumber').val();
                     var Address = $('#Address').val();
+                    var Email = $('#Email').val();
                     var _token = $('input[name="_token"]').val();
+
 
                     $.ajax({
                         url: APP_URL + '/insert-address',
                         method: 'POST',
-                        data: {CustomerName: CustomerName, PhoneNumber: PhoneNumber, Address: Address, _token: _token},
+                        data: {CustomerName: CustomerName, PhoneNumber: PhoneNumber, Address: Address, Email: Email, _token: _token},
                         success: function (data) {
                             $('#AddressModal').modal('hide');
                             fetch_address();

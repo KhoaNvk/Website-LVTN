@@ -20,6 +20,9 @@ use App\Models\BillInfo;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlacedMail;
+
 
 
 class CartController extends Controller
@@ -331,6 +334,12 @@ class CartController extends Controller
             $BillHistory->AdminName = 'System';
             $BillHistory->Status = 1;
             $BillHistory->save();
+
+            $customer = Customer::find($idCustomer);
+
+            // Gửi mail xác nhận đơn hàng
+            Mail::to($customer->Email)->send(new OrderPlacedMail($get_Bill, $get_cart));
+            
             return view("shop.cart.success-order")->with(compact('list_category', 'list_brand'));
         } else if ($request->vnp_TransactionStatus && $request->vnp_TransactionStatus != '00') {
             return Redirect::to('cart');
@@ -720,7 +729,7 @@ class CartController extends Controller
             $Bill->Payment = 'cash';
             $Bill->save();
             // xử lý đơn hàng
-            $get_Bill = Bill::where('created_at', now())->where('idCustomer', $idCustomer)->first();
+            $get_Bill = $Bill;
             $get_cart = Cart::where('idCustomer', $idCustomer)->get();
             // Chèn dữ liệu vào bảng billinfo
             foreach ($get_cart as $key => $cart) {
@@ -746,6 +755,13 @@ class CartController extends Controller
             }
             // xóa giỏ hàng và chuyển đến trang thành công
             Cart::where('idCustomer', $idCustomer)->delete();
+            $bill = $get_Bill;
+            $billInfo = BillInfo::join('product', 'product.idProduct', '=', 'billinfo.idProduct')
+                ->where('billinfo.idBill', $bill->idBill)
+                ->select('product.ProductName', 'billinfo.*')
+                ->get();
+            // Gửi mail xác nhận đơn hàng cho khách
+            Mail::to($customer->Email)->send(new OrderPlacedMail($bill, $billInfo));
             return view("shop.cart.success-order")->with(compact('list_category', 'list_brand'));
         } else if ($data['checkout'] == 'momo') {
             // Momo payment code

@@ -89,8 +89,12 @@
                                     <span class="mr-2">Điện thoại: {{$address->PhoneNumber}}</span>
                                 </li>
                                 <li class="cus-radio align-items-center" style="font-size:15px;">
+                                    <span>Email: {{$address->Email}}</span>
+                                </li>
+                                <li class="cus-radio align-items-center" style="font-size:15px;">
                                     <span>{{$address->Address}}</span>
                                 </li>
+                            
                             </ul>
                         </div>
 

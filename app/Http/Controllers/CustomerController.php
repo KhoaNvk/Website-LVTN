@@ -216,6 +216,8 @@ class CustomerController extends Controller
             $customer->PhoneNumber = $data['PhoneNumber'];
             $customer->CustomerName = $data['CustomerName'];
             $customer->Address = $data['Address'];
+            $customer->Email = $data['Email'];
+
 
             if ($request->hasFile('Avatar')){   // xử lý upload avt ( nếu chọn ảnh mới)
                 $get_image = $request->file('Avatar');
@@ -258,6 +260,7 @@ class CustomerController extends Controller
             $address->Address = $data['Address'];
             $address->CustomerName = $data['CustomerName'];
             $address->PhoneNumber = $data['PhoneNumber'];
+            $address->Email = $data['Email'];
 
             $address->save();
         }
@@ -272,7 +275,7 @@ class CustomerController extends Controller
             $address->Address = $data['Address'];   // Lưu địa chỉ mới
             $address->CustomerName = $data['CustomerName'];     // Lưu tên người nhận
             $address->PhoneNumber = $data['PhoneNumber'];       // Lưu số điện thoại người nhận
-
+            $address->Email = $data['Email'];                    // Lưu email người nhận
             $address->save();
         }
 
@@ -280,11 +283,11 @@ class CustomerController extends Controller
         public function fetch_address() {
             $idCustomer = Session::get('idCustomer');   //lấy id khách hàng đăng nhập
             $list_address = AddressCustomer::where('idCustomer', $idCustomer)->get();//lấy địa chỉ của addressCustomer
-            $default_address = Customer::where('idCustomer', $idCustomer)->first(['CustomerName', 'PhoneNumber', 'Address']);//lấy tên, sdt, địa chỉ của bảng customer
+            $default_address = Customer::where('idCustomer', $idCustomer)->first(['CustomerName', 'PhoneNumber', 'Address', 'Email']);//lấy tên, sdt, địa chỉ của bảng customer
             $output = '';
         
             // Hiện địa chỉ mặc định
-            if ($default_address && $default_address->CustomerName && $default_address->PhoneNumber && $default_address->Address) {
+            if ($default_address && $default_address->CustomerName && $default_address->PhoneNumber && $default_address->Address && $default_address->Email) {
                 $output .= '<li class="cus-radio align-items-center justify-content-between">
                                 <input type="radio" name="address_rdo" value="default" id="radioDefault" checked>
                                 <label for="radioDefault">
@@ -293,6 +296,7 @@ class CustomerController extends Controller
                                     </span>
                                     <span>'.$default_address->PhoneNumber.'</span>
                                     <span>'.$default_address->Address.'</span>
+                                    <span>'.$default_address->Email.'</span>
                                 </label>
                             </li>';
             } else {
@@ -314,6 +318,7 @@ class CustomerController extends Controller
                                     <span>'.$address->CustomerName.'</span>
                                     <span>'.$address->PhoneNumber.'</span>
                                     <span>'.$address->Address.'</span>
+                                    <span>'.$address->Email.'</span>
                                 </label>
                                 <div>
                                     <button type="button" data-toggle="modal" data-target="#EditAddressModal" class="edit-address btn btn-outline-primary" data-id="'.$address->idAddress.'" data-name="'.$address->CustomerName.'" data-phone="'.$address->PhoneNumber.'" data-address="'.$address->Address.'">Sửa</button>

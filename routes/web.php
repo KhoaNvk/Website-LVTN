@@ -6,6 +6,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Http\Controllers\GoogleController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,22 +47,6 @@ Route::post('/modal-compare', 'ProductController@modal_compare');
 Route::post('/modal-compare-search', 'ProductController@modal_compare_search');
 Route::post('/search-suggestions', 'ProductController@search_suggestions');
 
-//Sale
-Route::get('/manage-sale', 'ProductController@manage_sale');
-Route::get('/add-sale', 'ProductController@add_sale');
-Route::get('/edit-sale/{idSale}/{idProduct}', 'ProductController@edit_sale');
-Route::get('/delete-sale/{idSale}', 'ProductController@delete_sale');
-Route::post('/submit-add-sale', 'ProductController@submit_add_sale');
-Route::post('/submit-edit-sale/{idSale}/{idProduct}', 'ProductController@submit_edit_sale');
-
-//Sale
-Route::get('/manage-voucher', 'ProductController@manage_voucher');
-Route::get('/add-voucher', 'ProductController@add_voucher');
-Route::get('/edit-voucher/{idVoucher}', 'ProductController@edit_voucher');
-Route::get('/delete-voucher/{idVoucher}', 'ProductController@delete_voucher');
-Route::post('/submit-add-voucher', 'ProductController@submit_add_voucher');
-Route::post('/submit-edit-voucher/{idVoucher}', 'ProductController@submit_edit_voucher');
-
 //Cart
 Route::get('/cart', 'CartController@show_cart');
 Route::get('/empty-cart', 'CartController@empty_cart');
@@ -72,8 +57,6 @@ Route::get('/delete-cart', 'CartController@delete_cart');
 Route::post('/add-to-cart', 'CartController@add_to_cart');
 Route::post('/buy-now', 'CartController@buy_now');
 Route::post('/update-qty-cart', 'CartController@update_qty_cart');
-Route::post('/get-vouchers', 'CartController@getVouchers');
-Route::post('/check-voucher', 'CartController@check_voucher');
 Route::post('/submit-payment', 'CartController@submit_payment');
 
 //Bill
@@ -93,6 +76,8 @@ Route::get('/bill-info/{idBill}', 'BillController@bill_info');
 Route::post('/confirm-bill/{idBill}', 'BillController@confirm_bill');
 Route::post('/delete-bill/{idBill}', 'BillController@delete_bill');
 Route::post('/confirm-receipt/{idBill}', 'BillController@confirmReceipt');
+Route::get('/bill/qr/{idBill}', [App\Http\Controllers\BillController::class, 'generateQr'])->name('bill.qr');
+
 
 //Customer
 Route::get('/account', 'CustomerController@show_account_info');
@@ -100,7 +85,6 @@ Route::get('/login', 'CustomerController@login');
 Route::get('/register', 'CustomerController@register');
 Route::get('/logout', 'CustomerController@logout');
 Route::get('/change-password', 'CustomerController@change_password');
-Route::get('/show-voucher', 'CustomerController@show_voucher');
 Route::get('/wishlist', 'CustomerController@wishlist');
 Route::get('/compare', 'CustomerController@compare');
 Route::get('/search', 'CustomerController@search');
@@ -172,16 +156,6 @@ Route::get('/edit-attr-value/{idAttrValue}', 'AttributeValueController@edit_attr
 Route::get('/delete-attr-value/{idAttrValue}', 'AttributeValueController@delete_attr_value');
 Route::post('/submit-add-attr-value', 'AttributeValueController@submit_add_attr_value');
 Route::post('/submit-edit-attr-value/{idAttrValue}', 'AttributeValueController@submit_edit_attr_value');
-
-//Blog
-Route::get('/blog', 'BlogController@show_blog');
-Route::get('/blog/{BlogSlug}', 'BlogController@blog_details');
-Route::get('/manage-blog', 'BlogController@manage_blog');
-Route::get('/add-blog', 'BlogController@add_blog');
-Route::get('/edit-blog/{idBlog}', 'BlogController@edit_blog');
-Route::get('/delete-blog/{idBlog}', 'BlogController@delete_blog');
-Route::post('/submit-add-blog', 'BlogController@submit_add_blog');
-Route::post('/submit-edit-blog/{idBlog}', 'BlogController@submit_edit_blog');
 
 //Login Google
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

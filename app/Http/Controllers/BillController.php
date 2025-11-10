@@ -21,6 +21,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BillController extends Controller
 {
@@ -30,7 +31,8 @@ class BillController extends Controller
     public function checkLogin_Admin()
     {
         $idAdmin = Session::get('idAdmin');
-        if ($idAdmin == false) return Redirect::to('admin')->send();
+        if ($idAdmin == false)
+            return Redirect::to('admin')->send();
     }
 
     // Hiện tất cả đơn đặt hàng
@@ -179,7 +181,7 @@ class BillController extends Controller
                 }
                 $cart['attribute'] = $dataConvert;
                 $cart['product_option'] = $product_option;
-                return (object)$cart;
+                return (object) $cart;
             })->all();
 
         $count_waiting_bill = Bill::where('Status', '0')->count();
@@ -310,7 +312,8 @@ class BillController extends Controller
     public function checkLogin()
     {
         $idCustomer = Session::get('idCustomer');
-        if ($idCustomer == false) return Redirect::to('/home')->send();
+        if ($idCustomer == false)
+            return Redirect::to('/home')->send();
     }
 
     // Hiện tất cả đơn đặt hàng
@@ -332,7 +335,7 @@ class BillController extends Controller
 
         $list_category = Category::get();
         $list_brand = Brand::get();
-        
+
         $list_bill = Bill::where('bill.idCustomer', Session::get('idCustomer'))->orderBy('idBill', 'desc')->get();
         $customer = Customer::find(Session::get('idCustomer'));
         return view("shop.customer.ordered")->with(compact('list_category', 'list_brand', 'list_bill', 'customer'));
@@ -422,10 +425,11 @@ class BillController extends Controller
                     }
                 }
 
-                $cart['attribute'] = $product_option ?$dataConvert : [];
+                $cart['attribute'] = $product_option ? $dataConvert : [];
                 $cart['product_option'] = $product_option;
-                return (object)$cart;
-            })->all();;
+                return (object) $cart;
+            })->all();
+        ;
 
         return view("shop.customer.ordered-info")->with(compact('list_bill', 'list_category', 'list_brand', 'address', 'list_bill_info'));
     }
@@ -451,5 +455,27 @@ class BillController extends Controller
 
         return redirect()->back();
     }
+    public function generateQr($idBill)
+    {
+        $bill = Bill::find($idBill);
+        if (!$bill) {
+            return response()->json(['error' => 'Không tìm thấy đơn hàng'], 404);
+        }
+
+        $billInfo = BillInfo::where('idBill', $idBill)
+            ->join('product', 'product.idProduct', '=', 'billinfo.idProduct')
+            ->select('product.ProductName', 'billinfo.QuantityBuy', 'billinfo.Price')
+            ->get();
+
+        $qrContent = "Đơn hàng #{$bill->idBill}\n";
+        foreach ($billInfo as $item) {
+            $qrContent .= "- {$item->ProductName} ({$item->QuantityBuy} x " . number_format($item->Price, 0, ',', '.') . "₫)\n";
+        }
+        $qrContent .= "Tổng tiền: " . number_format($bill->TotalBill, 0, ',', '.') . "₫";
+
+        $image = QrCode::format('png')->encoding('UTF-8')->size(150)->generate($qrContent);
+        return response($image)->header('Content-type', 'image/png');
+    }
+
     /* ---------- End Shop ---------- */
 }

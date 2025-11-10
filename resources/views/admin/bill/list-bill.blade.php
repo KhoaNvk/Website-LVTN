@@ -1,5 +1,8 @@
 @extends('admin_layout')
 @section('content_dash')
+@php
+    use SimpleSoftwareIO\QrCode\Facades\QrCode;
+@endphp
 
 <div class="content-page">
     <div class="container-fluid">
@@ -25,6 +28,7 @@
                                 <th>Ngày Giao Hàng</th>
                                 <th>Trạng Thái</th>
                                 <th>Thao tác</th>
+                                <th>Mã QR</th>
                             </tr>
                         </thead>
                         <tbody class="ligth-body" id="load-bill">
@@ -69,6 +73,9 @@
                                         @endif   
                                     </div>
                                     </form>
+                                </td>
+                                <td>
+                                    <img src="{{ route('bill.qr', $bill->idBill) }}" alt="QR" width="80" height="80">
                                 </td>
                             </tr>
                             @endforeach
